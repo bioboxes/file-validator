@@ -1,7 +1,6 @@
 build: build/validate-input
 
-
 build/validate-input: bin/validate-input
-	./env/bin/nuitka --remove-output --standalone --output-dir=. $^
-	mv $(notdir $<).dist $(dir $@)
-	mv $@.exe $@
+	./env/bin/nuitka --remove-output --standalone $^
+	mkdir $(dir $@)
+	mv $(notdir $<).dist/$(notdir $@).exe $@
