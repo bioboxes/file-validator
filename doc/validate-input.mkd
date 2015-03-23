@@ -1,0 +1,11 @@
+### Biobox Input Validator
+
+The bioboxes project provides the tool `validate-input` which tests the given
+input YAML file matches the bioboxes input schema. This tool is used as
+follows:
+
+    validate-input --schema=schema.json --input=input.json
+
+This will return a non-zero exit code, and an error message if any errors are
+detected. If errors are found, then the biobox should exit. If no errors are
+found then the input file is valid.
