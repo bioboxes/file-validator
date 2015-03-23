@@ -1,0 +1,10 @@
+#!/bin/bash
+
+set -o errexit
+set -o pipefail
+
+ENV=env
+LIB=requirements.txt
+
+virtualenv $ENV
+$ENV/bin/pip install -r $LIB
