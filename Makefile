@@ -1,16 +1,26 @@
-env = PYTHONPATH=env/lib/python2.7/site-packages PATH=env/bin
+env = PYTHONPATH=validate_input:env/lib/python2.7/site-packages PATH=env/bin:$$PATH
 
 feature: build/validate-input Gemfile.lock
 	bundle exec cucumber 
 
 build: build/validate-input
 
-build/validate-input: bin/validate-input
-	./env/bin/nuitka --remove-output --standalone $^
-	mkdir -p $(dir $@)
-	mv $(notdir $<).dist/$(notdir $@).exe $@
+test:
+	$(env) nosetests --rednose
+
+console:
+	$(env) python -i console.py
+
+build/validate-input: bin/validate-input $(shell find validate_input/*.py)
+	$(env) nuitka --remove-output --standalone $<
+	rm -rf $(dir $@)
+	mv $(notdir $<).dist/ $(dir $@)
+	mv $@.exe $@
 
 Gemfile.lock: Gemfile
 	bundle install
 
-.PHONY: build feature
+clean:
+	rm -rf build
+
+.PHONY: build feature test

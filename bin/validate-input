@@ -1,3 +1,11 @@
 #!/usr/bin/env python
 
-print "Hello world"
+import sys
+
+from validate_input.main import run
+exit_code, msg = run()
+
+stream = sys.stdout if exit_code == 0 else sys.stderr
+
+stream.write(msg + "\n")
+sys.exit(exit_code)
