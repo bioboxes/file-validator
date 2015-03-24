@@ -1,0 +1,19 @@
+#!/usr/bin/env ruby
+
+require 'fog'
+
+file = ARGV.first
+
+connection = Fog::Storage.new({
+  :provider                 => 'AWS',
+  :region                   => 'us-west-1',
+  :aws_access_key_id        => ENV["AWS_ACCESS_KEY"],
+  :aws_secret_access_key    => ENV["AWS_SECRET_KEY"]
+})
+
+directory = connection.directories.get("bioboxes-tools")
+directory.files.create(
+  :key    => File.join("validate-input", File.basename(file)),
+  :body   => File.open(file),
+  :public => true
+)
