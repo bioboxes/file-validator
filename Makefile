@@ -5,6 +5,9 @@ feature: build/validate-input Gemfile.lock
 
 build: build/validate-input
 
+test:
+	$(env) nosetests --rednose
+
 build/validate-input: bin/validate-input $(shell find validate_input/*.py)
 	$(env) nuitka --remove-output --standalone $<
 	rm -rf $(dir $@)
@@ -17,4 +20,4 @@ Gemfile.lock: Gemfile
 clean:
 	rm -rf build
 
-.PHONY: build feature
+.PHONY: build feature test
