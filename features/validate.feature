@@ -9,7 +9,7 @@ Feature: Validate the input file for a biobox
     When I run `../../build/validate-input <arguments>`
     Then the stderr should contain exactly:
       """
-      usage: validate-input [-h] --schema SCHEMA_FILE --input THRESHOLD_FILE
+      usage: validate-input [-h] --schema SCHEMA_FILE --input INPUT_FILE
       validate-input: error: argument <arg> is required
 
       """
@@ -21,19 +21,25 @@ Feature: Validate the input file for a biobox
       | --schema=schema.yml | --input/-i  |
 
 
-  Scenario: The input file is not valid
-   Given a file named "thresholds.yml" with:
+  Scenario Outline: The input file is not valid
+   Given a file named "<error>" with:
       """
       'invalid yaml
       """
-     And a file named "schema.yml" with:
+     And a file named "<valid>" with:
       """
       ---
+        - valid yaml
       """
     When I run `../../build/validate-input --schema=schema.yml --input=input.yml`
-    Then the stderr should contain exactly:
+    Then the stdout should not contain anything
+     And the stderr should contain exactly:
       """
-      Error parsing the YAML file: schema.yml
+      Error parsing the YAML file: <error>
 
       """
      And the exit status should be 1
+
+    Examples:
+      | error      | valid     |
+      | schema.yml | input.yml |
