@@ -4,5 +4,6 @@ dependencies:
 
 test:
   override:
+    - script/test
     - script/build
     - script/feature

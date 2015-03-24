@@ -1,4 +1,4 @@
-env = PYTHONPATH=validate_input PATH=$$PATH:env/bin
+env = PYTHONPATH=validate_input:env/lib/python2.7/site-packages PATH=$$PATH:env/bin
 
 feature: build/validate-input Gemfile.lock
 	bundle exec cucumber 
