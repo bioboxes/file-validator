@@ -27,7 +27,7 @@ build/validate-input: bin/validate-input $(shell find validate_input/*.py)
 	mv $@.exe $@
 
 Gemfile.lock: Gemfile
-	bundle install
+	bundle install --path vendor/bundle
 
 clean:
 	rm -rf build
