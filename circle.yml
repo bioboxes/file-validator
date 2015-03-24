@@ -1,6 +1,7 @@
 dependencies:
   cache_directories:
-    - "vendor/bundle"
+    - "vendor/ruby"
+    - "vendor/python"
   override:
     - script/bootstrap
 
