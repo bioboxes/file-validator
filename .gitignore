@@ -1,5 +1,6 @@
 env/*
 build/*
+dist/*
 *.dist
 tmp
 Gemfile.lock
