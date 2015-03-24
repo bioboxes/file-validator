@@ -2,6 +2,9 @@ env = PYTHONPATH=validate_input:env/lib/python2.7/site-packages PATH=env/bin:$$P
 
 distributable = dist/validate-input-$(shell cat VERSION).tar.xz
 
+deploy:  ./plumbing/push-to-s3 $(distributable)
+	bundle exec $^
+
 feature: build/validate-input Gemfile.lock
 	bundle exec cucumber 
 
