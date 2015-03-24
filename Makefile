@@ -1,4 +1,4 @@
-env = PYTHONPATH=validate_input:env/lib/python2.7/site-packages PATH=env/bin:$$PATH
+env = PYTHONPATH=validate_input:vendor/python/lib/python2.7/site-packages PATH=vendor/python/bin:$$PATH
 
 distributable = dist/validate-input-$(shell cat VERSION).tar.xz
 
@@ -27,7 +27,7 @@ build/validate-input: bin/validate-input $(shell find validate_input/*.py)
 	mv $@.exe $@
 
 Gemfile.lock: Gemfile
-	bundle install --path vendor/bundle
+	bundle install --path vendor/ruby
 
 clean:
 	rm -rf build

@@ -3,7 +3,7 @@
 set -o errexit
 set -o pipefail
 
-ENV=env
+ENV=vendor/python
 LIB=requirements.txt
 
 virtualenv $ENV
