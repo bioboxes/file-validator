@@ -7,3 +7,9 @@ test:
     - script/test
     - script/build
     - script/feature
+
+deployment:
+  deploy:
+    branch: master
+    commands:
+      - ./script/deploy
