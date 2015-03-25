@@ -6,7 +6,10 @@ Feature: Validate the input file for a biobox
   Scenario Outline: Arguments are missing
    Given an empty file named "thresholds.yml"
      And an empty file named "schema.yml"
-    When I run `../../build/validate-input <arguments>`
+    When I run the bash command:
+      """
+      ${BINARY} <arguments>
+      """
     Then the stderr should contain exactly:
       """
       usage: validate-input [-h] --schema SCHEMA_FILE --input INPUT_FILE
@@ -31,7 +34,10 @@ Feature: Validate the input file for a biobox
       ---
         - valid yaml
       """
-    When I run `../../build/validate-input --schema=schema.yml --input=input.yml`
+    When I run the bash command:
+      """
+      ${BINARY} --schema=schema.yml --input=input.yml
+      """
     Then the stdout should not contain anything
      And the stderr should contain exactly:
       """
