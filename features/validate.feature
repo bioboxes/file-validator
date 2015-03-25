@@ -49,3 +49,68 @@ Feature: Validate the input file for a biobox
     Examples:
       | error      | valid     |
       | schema.yml | input.yml |
+
+
+  Scenario Outline: The input file is not valid
+   Given a file named "input.yml" with:
+      """
+      ---
+        <key>: "value"
+      """
+     And a file named "schema.yml" with:
+      """
+      ---
+      $schema: http://json-schema.org/draft-04/schema
+      title: Bioboxes short read assembler input file validator
+      type: object
+      properties:
+        version: {}
+        arguments: {}
+      required:
+        - version
+        - arguments
+      """
+    When I run the bash command:
+      """
+      ${BINARY} --schema=schema.yml --input=input.yml
+      """
+    Then the stdout should not contain anything
+     And the stderr should contain exactly:
+      """
+      '<missing>' is a required property
+
+      """
+     And the exit status should be 1
+
+    Examples:
+      | key       | missing   |
+      | version   | arguments |
+      | arguments | version   |
+
+  Scenario: The input file is valid
+   Given a file named "input.yml" with:
+      """
+      ---
+        version: "value"
+        arguments: "value"
+      """
+     And a file named "schema.yml" with:
+      """
+      ---
+      $schema: http://json-schema.org/draft-04/schema
+      title: Bioboxes short read assembler input file validator
+      type: object
+      properties:
+        version: {}
+        arguments: {}
+      required:
+        - version
+        - arguments
+      """
+    When I run the bash command:
+      """
+      ${BINARY} --schema=schema.yml --input=input.yml
+      """
+    Then the stdout should not contain anything
+     And the stderr should not contain anything
+     And the exit status should be 0

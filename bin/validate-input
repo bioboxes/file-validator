@@ -8,5 +8,5 @@ exit_code, msg = run()
 
 stream = sys.stdout if exit_code == 0 else sys.stderr
 
-stream.write(msg + "\n")
+stream.write(msg)
 sys.exit(exit_code)
