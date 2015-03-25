@@ -34,6 +34,7 @@ bootstrap: Gemfile.lock vendor/python
 
 .PHONY: bootstrap console test feature build deploy
 
+
 ###############################################
 #
 # Specific targets
@@ -54,6 +55,7 @@ build/validate-input: bin/validate-input $(shell find validate_input/*.py)
 vendor/python: requirements.txt
 	virtualenv $@
 	$@/bin/pip install -r $<
+	touch $@
 
 
 Gemfile.lock: Gemfile
