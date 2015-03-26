@@ -51,6 +51,7 @@ build/validate-input: bin/validate-input $(shell find validate_input/*.py)
 	rm -rf $(dir $@)
 	mv $(notdir $<).dist/ $(dir $@)
 	mv $@.exe $@
+	cp doc/validate-input.mkd $(dir $@)/README.mkd
 
 vendor/python: requirements.txt
 	virtualenv $@
