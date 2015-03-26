@@ -1,8 +1,10 @@
 #!/usr/bin/env ruby
 
 require 'fog'
+require 'colorize'
 
 file = ARGV.first
+dst  = File.join("validate-input", File.basename(file))
 
 connection = Fog::Storage.new({
   :provider                 => 'AWS',
@@ -12,8 +14,12 @@ connection = Fog::Storage.new({
 })
 
 directory = connection.directories.get("bioboxes-tools")
-directory.files.create(
-  :key    => File.join("validate-input", File.basename(file)),
-  :body   => File.open(file),
-  :public => true
-)
+exists = directory.files.head(dst)
+
+if exists
+  STDERR.puts "Can't deploy, this version already exists: #{dst}".colorize(:red)
+  exit 1
+else
+  directory.files.create(key: dst, body: File.open(file), public: true)
+  STDOUT.puts "Successfully released #{dst}".colorize(:green)
+end
