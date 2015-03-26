@@ -1,14 +1,27 @@
 env = PYTHONPATH=validate_input:vendor/python/lib/python2.7/site-packages PATH=vendor/python/bin:$$PATH
 
+pwd = $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
+
 distributable = dist/validate-input-$(shell cat VERSION).tar.xz
+
+
+###############################################
+#
+# Workflow steps
+#
+###############################################
+
 
 deploy:  ./plumbing/push-to-s3 $(distributable)
 	bundle exec $^
 
-feature: build/validate-input Gemfile.lock
-	bundle exec cucumber 
-
 build: build/validate-input
+	BINARY='$(realpath $<)' \
+	       bundle exec cucumber
+
+feature: Gemfile.lock
+	BINARY='$(pwd)/vendor/python/bin/python $(pwd)/bin/validate-input' \
+	       bundle exec cucumber
 
 test:
 	$(env) nosetests --rednose
@@ -17,6 +30,17 @@ console:
 	$(env) python -i console.py
 
 bootstrap: Gemfile.lock vendor/python
+
+
+.PHONY: bootstrap console test feature build deploy
+
+
+###############################################
+#
+# Specific targets
+#
+###############################################
+
 
 $(distributable): build/validate-input
 	mkdir -p $(dir $@)
@@ -31,6 +55,7 @@ build/validate-input: bin/validate-input $(shell find validate_input/*.py)
 vendor/python: requirements.txt
 	virtualenv $@
 	$@/bin/pip install -r $<
+	touch $@
 
 
 Gemfile.lock: Gemfile
@@ -38,5 +63,3 @@ Gemfile.lock: Gemfile
 
 clean:
 	rm -rf build
-
-.PHONY: build feature test

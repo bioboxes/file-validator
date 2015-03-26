@@ -5,3 +5,4 @@ dist/*
 tmp
 Gemfile.lock
 *.pyc
+.bundle

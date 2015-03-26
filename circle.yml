@@ -8,8 +8,8 @@ dependencies:
 test:
   override:
     - script/test
-    - script/build
     - script/feature
+    - script/build
 
 deployment:
   deploy:
