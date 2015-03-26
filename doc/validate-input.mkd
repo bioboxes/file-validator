@@ -13,6 +13,10 @@ then the biobox should exit. The command line interface for this tool is:
 
     validate-input --schema=schema.yml --input=input.yml
 
+[Download the latest version.][download]
+
+[download]: https://s3-us-west-1.amazonaws.com/bioboxes-tools/validate-input/validate-input-current.tar.xz
+
 ### Example install
 
 The tool 'validate-input' can be installed in your Docker image by downloading
