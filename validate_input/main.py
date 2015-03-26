@@ -3,8 +3,6 @@ import encodings
 import yaml
 import yaml.scanner as scan
 
-import jsonspec.validators as js
-
 import validictory as js
 
 from pymonad.Either import Left, Right
