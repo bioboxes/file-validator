@@ -75,10 +75,9 @@ Feature: Validate the input file for a biobox
       ${BINARY} --schema=schema.yml --input=input.yml
       """
     Then the stdout should not contain anything
-     And the stderr should contain exactly:
+     And the stderr should contain:
       """
-      '<missing>' is a required property
-
+      does not have property '<missing>'
       """
      And the exit status should be 1
 
