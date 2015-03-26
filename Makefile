@@ -12,8 +12,9 @@ distributable = dist/validate-input-$(shell cat VERSION).tar.xz
 ###############################################
 
 
-deploy:  ./plumbing/push-to-s3 $(distributable)
-	bundle exec $^
+deploy: $(distributable)
+	bundle exec ./plumbing/push-to-s3 $<
+	bundle exec ./plumbing/rebuild-website
 
 build: build/validate-input
 	BINARY='$(realpath $<)' \
