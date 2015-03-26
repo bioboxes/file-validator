@@ -51,7 +51,7 @@ Feature: Validate the input file for a biobox
       | schema.yml | input.yml |
 
 
-  Scenario Outline: The input file is not valid
+  Scenario Outline: The input file is missing a property
    Given a file named "input.yml" with:
       """
       ---
@@ -77,7 +77,7 @@ Feature: Validate the input file for a biobox
     Then the stdout should not contain anything
      And the stderr should contain:
       """
-      does not have property '<missing>'
+      Required field '<missing>' is missing
       """
      And the exit status should be 1
 
@@ -85,6 +85,35 @@ Feature: Validate the input file for a biobox
       | key       | missing   |
       | version   | arguments |
       | arguments | version   |
+
+
+  Scenario: The input file has too many items
+   Given a file named "input.yml" with:
+      """
+      ---
+      - item
+      - item
+      - item
+      """
+     And a file named "schema.yml" with:
+      """
+      ---
+      $schema: http://json-schema.org/draft-04/schema
+      title: Bioboxes short read assembler input file validator
+      type: array
+      maxItems: 2
+      """
+    When I run the bash command:
+      """
+      ${BINARY} --schema=schema.yml --input=input.yml
+      """
+    Then the stdout should not contain anything
+     And the stderr should contain:
+      """
+      must have length less than or equal to 2
+      """
+     And the exit status should be 1
+
 
   Scenario: The input file is valid
    Given a file named "input.yml" with:

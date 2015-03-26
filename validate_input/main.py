@@ -5,9 +5,7 @@ import yaml.scanner as scan
 
 import jsonspec.validators as js
 
-from json_schema_validator.errors    import ValidationError
-from json_schema_validator.schema    import Schema
-from json_schema_validator.validator import Validator
+import validictory as js
 
 from pymonad.Either import Left, Right
 from pymonad.Reader import curry
@@ -40,8 +38,8 @@ def parse_yaml(file_):
 @curry
 def validate(schema, input_):
     try:
-        return Right(Validator.validate(Schema(schema), input_))
-    except ValidationError as error:
+        return Right(js.validate(input_, schema))
+    except ValueError as error:
         return Left(error.message)
 
 def run():
