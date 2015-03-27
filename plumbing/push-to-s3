@@ -4,7 +4,9 @@ require 'fog'
 require 'colorize'
 
 file = ARGV.first
-dst  = File.join("validate-input", File.basename(file))
+
+version = File.join("validate-input", File.basename(file))
+current = 'validate-input/validate-input-current.tar.xz'
 
 connection = Fog::Storage.new({
   :provider                 => 'AWS',
@@ -14,12 +16,13 @@ connection = Fog::Storage.new({
 })
 
 directory = connection.directories.get("bioboxes-tools")
-exists = directory.files.head(dst)
+exists = directory.files.head(version)
 
 if exists
-  STDERR.puts "Can't deploy, this version already exists: #{dst}".colorize(:red)
+  STDERR.puts "Can't deploy, this version already exists: #{version}".colorize(:red)
   exit 1
 else
-  directory.files.create(key: dst, body: File.open(file), public: true)
-  STDOUT.puts "Successfully released #{dst}".colorize(:green)
+  directory.files.create(key: version, body: File.open(file), public: true)
+  directory.files.create(key: current, body: File.open(file), public: true)
+  STDOUT.puts "Successfully released #{version}".colorize(:green)
 end
