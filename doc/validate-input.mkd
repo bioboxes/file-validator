@@ -1,4 +1,4 @@
-## Biobox Input Validator
+# biobox.yml Validator
 
 Biobox authors should check the input data provided by the user is valid before
 starting. This will prevent unexpected program behaviour or errors halfway
@@ -11,37 +11,45 @@ and return a non-zero exit code and error message if the input data is not
 correct. If identified, this error message should be returned to the user, and
 then the biobox should exit. The command line interface for this tool is:
 
-    validate-input --schema=schema.yml --input=input.yml
+~~~ bash
+validate-input --schema=schema.yml --input=input.yml
+~~~
 
 [Download the latest version.][download]
 
 [download]: https://s3-us-west-1.amazonaws.com/bioboxes-tools/validate-input/validate-input-current.tar.xz
 
-### Example install
+## Example install
 
 The tool 'validate-input' can be installed in your Docker image by downloading
 and unpacking. An example is to fetch the current version and decompress it
 into the directory `/biobox-validator`.
 
-    ENV BASE_URL https://s3-us-west-1.amazonaws.com/bioboxes-tools/validate-input
-    ENV VERSION  validate-input-current.tar.xz
-    RUN mkdir /biobox-validator
-    RUN wget \
-          --quiet \
-          --output-document -\
-          ${BASE_URL}/${VERSION} \
-        | tar xJf - \
-          --directory /biobox-validator \
-          --strip-components=1
+~~~ dockerfile
+ENV BASE_URL https://s3-us-west-1.amazonaws.com/bioboxes-tools/validate-input
+ENV VERSION  validate-input-current.tar.xz
+RUN mkdir /biobox-validator
+RUN wget \
+      --quiet \
+      --output-document -\
+      ${BASE_URL}/${VERSION} \
+    | tar xJf - \
+      --directory /biobox-validator \
+      --strip-components=1
+~~~
 
-### Example usage
+## Example usage
 
 The tools should be used at the start of a script to ensure the data passed by
 the user is correct. One way to do this is with a bash script that exits when a
 non-zero exit code is generated.
 
-    #!/bin/bash
+~~~ bash
+#!/bin/bash
 
-    set -o errexit
+set -o errexit
 
-    /biobox-validator/validate-input --schema=schema.yml --input=input.yml
+/biobox-validator/validate-input \
+  --schema=schema.yml \
+  --input=input.yml
+~~~
