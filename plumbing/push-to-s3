@@ -19,8 +19,7 @@ directory = connection.directories.get("bioboxes-tools")
 exists = directory.files.head(version)
 
 if exists
-  STDERR.puts "Can't deploy, this version already exists: #{version}".colorize(:red)
-  exit 1
+  STDERR.puts "Skipping deployment this version already exists: #{version}".colorize(:red)
 else
   directory.files.create(key: version, body: File.open(file), public: true)
   directory.files.create(key: current, body: File.open(file), public: true)
