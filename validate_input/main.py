@@ -32,6 +32,8 @@ def parse_yaml(file_):
             return Right(yaml.load(f.read()))
     except scan.ScannerError:
         return Left("Error parsing the YAML file: {0}".format(file_))
+    except IOError:
+        return Left("File not found: {0}".format(file_))
 
 @curry
 def validate(schema, input_):
