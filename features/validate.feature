@@ -23,6 +23,24 @@ Feature: Validate the input file for a biobox
       | --input=input.yml   | --schema/-s |
       | --schema=schema.yml | --input/-i  |
 
+  Scenario Outline: Files are missing
+   Given an empty file named "exists.yml"
+    When I run the bash command:
+      """
+      ${BINARY} <arguments>
+      """
+    Then the stderr should contain exactly:
+      """
+      File not found: missing.yml
+
+      """
+     And the exit status should not be 0
+
+    Examples:
+      | arguments                               |
+      | --input=missing.yml --schema=exists.yml |
+      | --input=exists.yml --schema=missing.yml |
+
 
   Scenario Outline: The input file is not valid
    Given a file named "<error>" with:
