@@ -1,8 +1,7 @@
 import argparse
-import encodings
 import yaml
 import yaml.scanner as scan
-
+import os.path
 import validictory as js
 
 from pymonad.Either import Left, Right
@@ -42,10 +41,28 @@ def validate(schema, input_):
     except ValueError as error:
         return Left(error.message)
 
+def check_mounted_files(input_):
+    files = filter(lambda x : x.iterkeys().next() in get_file_types(), input_["arguments"])
+    for file in files:
+        file = file.itervalues().next()
+        if not os.path.isfile(file[0]["value"]):
+            return Left("Provided path " + file[0]["value"] + " of item " + file[0]["id"] + " does not exist.")
+    return Right("")
+
+def get_file_types():
+    return ["fastq"]
+
 def run():
     args  = get_arguments()
+    schema = parse_yaml(args['schema_file'])
+    input_file = parse_yaml(args['input_file'])
     chain = [validate,
-             parse_yaml(args['schema_file']),
-             parse_yaml(args['input_file'])]
+             schema,
+             input_file]
 
-    return generate_exit_status(reduce(lambda a, b: b >> a, chain))
+    result = reduce(lambda a, b: b >> a, chain)
+
+    if(result.__class__ == Right):
+        result = input_file >> check_mounted_files
+
+    return generate_exit_status(result)
