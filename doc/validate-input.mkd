@@ -1,4 +1,4 @@
-# biobox.yml Validator
+# biobox.yaml Validator
 
 Biobox authors should check the input data provided by the user is valid before
 starting. This will prevent unexpected program behaviour or errors halfway
