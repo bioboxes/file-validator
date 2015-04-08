@@ -37,9 +37,10 @@ def parse_yaml(file_):
 @curry
 def validate(schema, input_):
     try:
-        return Right(js.validate(input_, schema))
+        js.validate(input_, schema)
     except ValueError as error:
         return Left(error.message)
+    return Right(input_)
 
 def check_mounted_files(input_):
     files = filter(lambda x : x.iterkeys().next() in get_file_types(), input_["arguments"])

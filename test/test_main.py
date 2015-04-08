@@ -5,6 +5,12 @@ import validate_input.main as main
 from pymonad.Either      import Left, Right
 from pymonad.Applicative import *
 
+def validate(schema, input_):
+    """
+    Helper method to run validation
+    """
+    return Right(input_) >> (Right(schema) >> main.validate)
+
 def test_loading_valid_yaml():
     file_  = f.create_temp_file("---\n- valid yaml")
     result = main.parse_yaml(file_)
@@ -23,6 +29,7 @@ def test_generate_exit_status():
 def test_validate_with_valid_data():
     result = main.validate({"maxItems" : 2}, [1, 2])
     f.assert_successful(result)
+    nose.assert_equal(result.getValue(), [1, 2])
 
 
 def validate(schema, input_):
