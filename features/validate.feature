@@ -137,8 +137,12 @@ Feature: Validate the input file for a biobox
    Given a file named "input.yml" with:
       """
       ---
-        version: "value"
-        arguments: "value"
+        version: 0.9.0
+        arguments:
+            - fastq:
+                - id: "pe"
+                  value: "/proc/cgroups"
+                  type: paired
       """
      And a file named "schema.yml" with:
       """

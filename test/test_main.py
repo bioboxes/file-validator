@@ -32,6 +32,22 @@ def test_validate_with_valid_data():
     result = validate({"maxItems" : 2}, [1, 2])
     f.assert_successful(result)
 
+def test_check_mounted_files_with_not_existing_files():
+    input_ = {
+        "version" : "0.9.0",
+        "arguments" : [
+                {
+                 "fastq" : [{
+                     "id" : "t",
+                     "value" : "/path/to/file",
+                     "type": "paired"
+                 }]
+                }
+              ]
+    }
+    result = main.check_mounted_files(input_)
+    f.assert_failure(result)
+
 def test_validate_with_invalid_large_list():
     result = validate({"maxItems" : 2}, [1, 2, 3])
     f.assert_failure(result)
