@@ -48,22 +48,17 @@ def check_mounted_files(input_):
         file = file.itervalues().next()
         if not os.path.isfile(file[0]["value"]):
             return Left("Provided path " + file[0]["value"] + " of item " + file[0]["id"] + " does not exist.")
-    return Right("")
+    return Right(input_)
 
 def get_file_types():
     return ["fastq"]
 
 def run():
     args  = get_arguments()
-    schema = parse_yaml(args['schema_file'])
-    input_file = parse_yaml(args['input_file'])
     chain = [validate,
-             schema,
-             input_file]
+             parse_yaml(args['schema_file']),
+             parse_yaml(args['input_file'])]
 
-    result = reduce(lambda a, b: b >> a, chain)
-
-    if(result.__class__ == Right):
-        result = input_file >> check_mounted_files
+    result = reduce(lambda method, result: result >> method, chain) >> check_mounted_files
 
     return generate_exit_status(result)
