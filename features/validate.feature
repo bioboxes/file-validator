@@ -133,16 +133,16 @@ Feature: Validate the input file for a biobox
      And the exit status should be 1
 
 
-  Scenario: The input file is valid
+  Scenario: The specified fasta file is missing
    Given a file named "input.yml" with:
       """
       ---
         version: 0.9.0
         arguments:
-            - fastq:
-                - id: "pe"
-                  value: "/proc/cgroups"
-                  type: paired
+          - fastq:
+            - id: "pe"
+              value: "example.fa"
+              type: paired
       """
      And a file named "schema.yml" with:
       """
@@ -157,6 +157,42 @@ Feature: Validate the input file for a biobox
         - version
         - arguments
       """
+    When I run the bash command:
+      """
+      ${BINARY} --schema=schema.yml --input=input.yml
+      """
+    Then the stdout should not contain anything
+     And the stderr should contain:
+      """
+      Provided path example.fa of item pe does not exist.
+      """
+     And the exit status should be 1
+
+  Scenario: The input file is valid
+   Given a file named "input.yml" with:
+      """
+      ---
+        version: 0.9.0
+        arguments:
+          - fastq:
+            - id: "pe"
+              value: "example.fa"
+              type: paired
+      """
+     And a file named "schema.yml" with:
+      """
+      ---
+      $schema: http://json-schema.org/draft-04/schema
+      title: Bioboxes short read assembler input file validator
+      type: object
+      properties:
+        version: {}
+        arguments: {}
+      required:
+        - version
+        - arguments
+      """
+     And an empty file named "example.fa"
     When I run the bash command:
       """
       ${BINARY} --schema=schema.yml --input=input.yml
