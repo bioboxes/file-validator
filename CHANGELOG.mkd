@@ -1,0 +1,6 @@
+## 0.1.0
+
+First stable release. This does the following:
+
+  * Ensures the schema is valid using json-schema library.
+  * Ensures the given fastq files in the schema exist.
