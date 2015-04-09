@@ -51,7 +51,7 @@ def check_mounted_files(input_):
     return Right(input_)
 
 def get_file_types():
-    return ["fastq"]
+    return ["fastq","fasta"]
 
 def run():
     args  = get_arguments()
