@@ -2,8 +2,7 @@ env = PYTHONPATH=validate_biobox_file:vendor/python/lib/python2.7/site-packages 
 
 pwd = $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 
-distributable = dist/validate-biobox-file-$(shell cat VERSION).tar.xz
-
+distributable = dist/validate-biobox-file.tar.xz
 
 ###############################################
 #
@@ -12,8 +11,8 @@ distributable = dist/validate-biobox-file-$(shell cat VERSION).tar.xz
 ###############################################
 
 
-deploy: $(distributable)
-	bundle exec ./plumbing/push-to-s3 $<
+deploy: VERSION $(distributable)
+	bundle exec ./plumbing/push-to-s3 $^
 	bundle exec ./plumbing/rebuild-website
 
 build: build/validate-biobox-file

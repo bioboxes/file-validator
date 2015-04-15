@@ -3,10 +3,14 @@
 require 'fog'
 require 'colorize'
 
-file = ARGV.first
+file  = ARGV.first
+patch_version = File.read(ARGV.last)
+minor_version = (patch_version.split('.')[0..1] << 'x').join('.')
+major_version = (patch_version.split('.')[0..0] << 'x' << 'y').join('.')
 
-version = File.join("validate-input", File.basename(file))
-current = 'validate-input/validate-input-current.tar.xz'
+patch = "validate-biobox-file/validate-biobox-file-#{patch_version}.tar.xz"
+minor = "validate-biobox-file/validate-biobox-file-#{minor_version}.tar.xz"
+major = "validate-biobox-file/validate-biobox-file-#{major_version}.tar.xz"
 
 connection = Fog::Storage.new({
   :provider                 => 'AWS',
@@ -16,12 +20,17 @@ connection = Fog::Storage.new({
 })
 
 directory = connection.directories.get("bioboxes-tools")
-exists = directory.files.head(version)
+exists = directory.files.head(patch_version)
 
 if exists
-  STDERR.puts "Skipping deployment this version already exists: #{version}".colorize(:red)
+  STDERR.puts "Skipping deployment this version already exists: #{patch_version}".colorize(:red)
 else
-  directory.files.create(key: version, body: File.open(file), public: true)
-  directory.files.create(key: current, body: File.open(file), public: true)
-  STDOUT.puts "Successfully released #{version}".colorize(:green)
+  directory.files.create(key: patch, body: File.open(file), public: true)
+  STDOUT.puts "Successfully released #{patch_version}".colorize(:green)
+
+  directory.files.create(key: minor, body: File.open(file), public: true)
+  STDOUT.puts "Successfully updated #{minor}".colorize(:green)
+
+  directory.files.create(key: major, body: File.open(file), public: true)
+  STDOUT.puts "Successfully updated #{major}".colorize(:green)
 end
