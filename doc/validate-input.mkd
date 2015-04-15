@@ -5,29 +5,29 @@ starting. This will prevent unexpected program behaviour or errors halfway
 through a multi-step pipeline. Any errors should be reported back to the user
 with a clear message so they can be understood and fixed.
 
-The bioboxes project provides the command line tool `validate-input` to help
-test the input YAML file given to a biobox. This tool with test the input YAML
-and return a non-zero exit code and error message if the input data is not
+The bioboxes project provides the command line tool `validate-biobox-file` to help
+test the input YAML file given to a biobox. This tool with test the YAML
+and return a non-zero exit code and error message if the biobox data is not
 correct. If identified, this error message should be returned to the user, and
 then the biobox should exit. The command line interface for this tool is:
 
 ~~~ bash
-validate-input --schema=schema.yml --input=input.yml
+validate-biobox-file --schema=schema.yml --input=input.yml
 ~~~
 
 [Download the latest version.][download]
 
-[download]: https://s3-us-west-1.amazonaws.com/bioboxes-tools/validate-input/validate-input-current.tar.xz
+[download]: https://s3-us-west-1.amazonaws.com/bioboxes-tools/validate-biobox-file/validate-biobox-file-0.1.x.tar.xz
 
 ## Example install
 
-The tool 'validate-input' can be installed in your Docker image by downloading
-and unpacking. An example is to fetch the current version and decompress it
-into the directory `/biobox-validator`.
+The tool `validate-biobox-file` can be installed in your Docker image by
+downloading and unpacking. An example is to fetch the current version and
+decompress it into the directory `/biobox-validator`.
 
 ~~~ dockerfile
-ENV BASE_URL https://s3-us-west-1.amazonaws.com/bioboxes-tools/validate-input
-ENV VERSION  validate-input-current.tar.xz
+ENV BASE_URL https://s3-us-west-1.amazonaws.com/bioboxes-tools/validate-biobox-file
+ENV VERSION  validate-biobox-file-0.1.x.tar.xz
 RUN mkdir /biobox-validator
 RUN wget \
       --quiet \
@@ -49,7 +49,7 @@ non-zero exit code is generated.
 
 set -o errexit
 
-/biobox-validator/validate-input \
+/biobox-validator/validate-biobox-file \
   --schema=schema.yml \
   --input=input.yml
 ~~~
