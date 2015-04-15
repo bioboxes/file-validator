@@ -60,4 +60,4 @@ def test_check_mounted_files_with_not_existing_files():
     }
     result = main.check_mounted_files(input_)
     f.assert_failure(result)
-    nose.assert_equal(result.getValue(), "Provided path '/path/to/file' of item 't' does not exist.")
+    nose.assert_equal(result.getValue(), "Provided path '/path/to/file' in item 't' does not exist.")
