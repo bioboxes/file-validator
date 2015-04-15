@@ -1,7 +1,7 @@
 ## Bioboxes Input Validator
 
-This repository contains the code for building the `validate-input` tool for
-bioboxes. Documentation is provided in the `doc` folder.
+This repository contains the code for building the `validate-biobox-file` tool
+for bioboxes. Documentation is provided in the `doc` folder.
 
 ### Development
 
@@ -9,7 +9,8 @@ On a successful commit to master the following actions happen on the continuous
 integration server:
 
   * A new binary version is built using [nuitka][].
-  * The archive `validate-input-$VERSION.tar.xz` is created from the build.
+  * The archive `validate-biobox-file-$VERSION.tar.xz` is created from the
+    build.
   * This file is pushed to amazon S3 assuming there is not already an existing
     file with the same version number.
   * A rebuild is triggered of the [bioboxes.org][] repository.
@@ -24,10 +25,10 @@ accepted:
 
   * `script/test`: Runs python unit tests
   * `script/feature`: Runs cucumber feature tests against the executable in
-    `bin/validate-input`.
+    `bin/validate-biobox-file`.
   * `script/build`: Builds a compiled version of the executable and then runs
     the same feature tests against the compiled verson.
 
 [nuitka]: http://nuitka.net/
 [bioboxes.org]: http://bioboxes.org
-[display]: http://bioboxes.org/validate-input/
+[display]: http://bioboxes.org/validate-biobox-file/
