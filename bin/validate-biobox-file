@@ -3,7 +3,7 @@
 import sys, os.path
 sys.path.append(os.path.dirname(sys.argv[0]) + '/../')
 
-from validate_input.main import run
+from validate_biobox_file.main import run
 exit_code, msg = run()
 
 stream = sys.stdout if exit_code == 0 else sys.stderr
