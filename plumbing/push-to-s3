@@ -4,7 +4,7 @@ require 'fog'
 require 'colorize'
 
 file  = ARGV.last
-patch_version = File.open(ARGV.first)
+patch_version = File.read(ARGV.first)
 minor_version = (patch_version.split('.')[0..1] << 'x').join('.')
 major_version = (patch_version.split('.')[0..0] << 'x' << 'y').join('.')
 
