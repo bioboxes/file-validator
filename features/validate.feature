@@ -173,7 +173,7 @@ Feature: Validate the biobox file
       | fastq |
       | fasta |
 
-  Scenario: The input file is valid
+  Scenario Outline: The input <type> file is exists
    Given a file named "input.yml" with:
       """
       ---
@@ -181,7 +181,7 @@ Feature: Validate the biobox file
         arguments:
           - fastq:
             - id: "pe"
-              value: "example.fa"
+              value: "example_file"
               type: paired
       """
      And a file named "schema.yml" with:
@@ -197,7 +197,7 @@ Feature: Validate the biobox file
         - version
         - arguments
       """
-     And an empty file named "example.fa"
+     And an empty file named "example_file"
     When I run the bash command:
       """
       ${BINARY} --schema=schema.yml --input=input.yml
@@ -205,3 +205,8 @@ Feature: Validate the biobox file
     Then the stdout should not contain anything
      And the stderr should not contain anything
      And the exit status should be 0
+
+    Examples:
+      | type  |
+      | fastq |
+      | fasta |
