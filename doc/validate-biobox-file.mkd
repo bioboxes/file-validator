@@ -17,7 +17,7 @@ validate-biobox-file --schema=schema.yml --input=input.yml
 
 [Download the latest version.][download]
 
-[download]: https://s3-us-west-1.amazonaws.com/bioboxes-tools/validate-biobox-file/validate-biobox-file-0.1.x.tar.xz
+[download]: https://s3-us-west-1.amazonaws.com/bioboxes-tools/validate-biobox-file/0.x.y/validate-biobox-file.tar.xz
 
 ## Example install
 
