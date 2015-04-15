@@ -1,6 +1,6 @@
-import helper              as f
-import nose.tools          as nose
-import validate_input.main as main
+import helper                    as f
+import nose.tools                as nose
+import validate_biobox_file.main as main
 
 from pymonad.Either      import Left, Right
 from pymonad.Applicative import *
