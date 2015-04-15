@@ -1,4 +1,4 @@
-env = PYTHONPATH=validate_input:vendor/python/lib/python2.7/site-packages PATH=vendor/python/bin:$$PATH
+env = PYTHONPATH=validate_biobox_file:vendor/python/lib/python2.7/site-packages PATH=vendor/python/bin:$$PATH
 
 pwd = $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 
@@ -47,7 +47,7 @@ $(distributable): build/validate-biobox-file
 	mkdir -p $(dir $@)
 	tar -c -J -f $@ $(dir $^)
 
-build/validate-biobox-file: bin/validate-biobox-file $(shell find validate_input/*.py)
+build/validate-biobox-file: bin/validate-biobox-file $(shell find validate_biobox_file/*.py)
 	$(env) nuitka --remove-output --standalone $<
 	rm -rf $(dir $@)
 	mv $(notdir $<).dist/ $(dir $@)
