@@ -3,14 +3,14 @@
 require 'fog'
 require 'colorize'
 
-file  = ARGV.first
-patch_version = File.open(ARGV.last, 'r:iso-8859-1').read
+file  = ARGV.last
+patch_version = File.open(ARGV.first)
 minor_version = (patch_version.split('.')[0..1] << 'x').join('.')
 major_version = (patch_version.split('.')[0..0] << 'x' << 'y').join('.')
 
-patch = "validate-biobox-file/validate-biobox-file-#{patch_version}.tar.xz"
-minor = "validate-biobox-file/validate-biobox-file-#{minor_version}.tar.xz"
-major = "validate-biobox-file/validate-biobox-file-#{major_version}.tar.xz"
+patch = "validate-biobox-file/#{patch_version}/validate-biobox-file.tar.xz"
+minor = "validate-biobox-file/#{minor_version}/validate-biobox-file.tar.xz"
+major = "validate-biobox-file/#{major_version}/validate-biobox-file.tar.xz"
 
 connection = Fog::Storage.new({
   :provider                 => 'AWS',
