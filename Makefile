@@ -2,7 +2,7 @@ env = PYTHONPATH=validate_input:vendor/python/lib/python2.7/site-packages PATH=v
 
 pwd = $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 
-distributable = dist/validate-input-$(shell cat VERSION).tar.xz
+distributable = dist/validate-biobox-file-$(shell cat VERSION).tar.xz
 
 
 ###############################################
@@ -16,12 +16,12 @@ deploy: $(distributable)
 	bundle exec ./plumbing/push-to-s3 $<
 	bundle exec ./plumbing/rebuild-website
 
-build: build/validate-input
+build: build/validate-biobox-file
 	BINARY='$(realpath $<)' \
 	       bundle exec cucumber
 
 feature: Gemfile.lock
-	BINARY='$(pwd)/vendor/python/bin/python $(pwd)/bin/validate-input' \
+	BINARY='$(pwd)/vendor/python/bin/python $(pwd)/bin/validate-biobox-file' \
 	       bundle exec cucumber
 
 test:
@@ -43,16 +43,16 @@ bootstrap: Gemfile.lock vendor/python
 ###############################################
 
 
-$(distributable): build/validate-input
+$(distributable): build/validate-biobox-file
 	mkdir -p $(dir $@)
 	tar -c -J -f $@ $(dir $^)
 
-build/validate-input: bin/validate-input $(shell find validate_input/*.py)
+build/validate-biobox-file: bin/validate-biobox-file $(shell find validate_input/*.py)
 	$(env) nuitka --remove-output --standalone $<
 	rm -rf $(dir $@)
 	mv $(notdir $<).dist/ $(dir $@)
 	mv $@.exe $@
-	cp doc/validate-input.mkd $(dir $@)/README.mkd
+	cp doc/validate-biobox-file.mkd $(dir $@)/README.mkd
 
 vendor/python: requirements.txt
 	virtualenv $@
