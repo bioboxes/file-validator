@@ -133,15 +133,15 @@ Feature: Validate the biobox file
      And the exit status should be 1
 
 
-  Scenario: The specified fasta file is missing
+  Scenario Outline: The specified <type> file is missing
    Given a file named "input.yml" with:
       """
       ---
         version: 0.9.0
         arguments:
-          - fastq:
+          - <type>:
             - id: "pe"
-              value: "example.fa"
+              value: "missing_file"
               type: paired
       """
      And a file named "schema.yml" with:
@@ -164,11 +164,16 @@ Feature: Validate the biobox file
     Then the stdout should not contain anything
      And the stderr should contain:
       """
-      Provided path example.fa of item pe does not exist.
+      Provided path 'missing_file' in item 'pe' does not exist.
       """
      And the exit status should be 1
 
-  Scenario: The input file is valid
+    Examples:
+      | type  |
+      | fastq |
+      | fasta |
+
+  Scenario Outline: The input <type> file is exists
    Given a file named "input.yml" with:
       """
       ---
@@ -176,7 +181,7 @@ Feature: Validate the biobox file
         arguments:
           - fastq:
             - id: "pe"
-              value: "example.fa"
+              value: "example_file"
               type: paired
       """
      And a file named "schema.yml" with:
@@ -192,7 +197,7 @@ Feature: Validate the biobox file
         - version
         - arguments
       """
-     And an empty file named "example.fa"
+     And an empty file named "example_file"
     When I run the bash command:
       """
       ${BINARY} --schema=schema.yml --input=input.yml
@@ -200,3 +205,8 @@ Feature: Validate the biobox file
     Then the stdout should not contain anything
      And the stderr should not contain anything
      And the exit status should be 0
+
+    Examples:
+      | type  |
+      | fastq |
+      | fasta |

@@ -45,13 +45,13 @@ def validate(schema, input_):
 def check_mounted_files(input_):
     files = filter(lambda x : x.iterkeys().next() in get_file_types(), input_["arguments"])
     for file in files:
-        file = file.itervalues().next()
-        if not os.path.isfile(file[0]["value"]):
-            return Left("Provided path " + file[0]["value"] + " of item " + file[0]["id"] + " does not exist.")
+        f = file.itervalues().next()[0]
+        if not os.path.isfile(f["value"]):
+            return Left("Provided path '{0}' in item '{1}' does not exist.".format(f["value"], f["id"]))
     return Right(input_)
 
 def get_file_types():
-    return ["fastq"]
+    return ["fastq","fasta"]
 
 def run():
     args  = get_arguments()
