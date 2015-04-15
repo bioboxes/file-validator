@@ -1,4 +1,4 @@
-## Bioboxes Input Validator
+## Validate Biobox File
 
 This repository contains the code for building the `validate-biobox-file` tool
 for bioboxes. Documentation is provided in the `doc` folder.
@@ -9,8 +9,7 @@ On a successful commit to master the following actions happen on the continuous
 integration server:
 
   * A new binary version is built using [nuitka][].
-  * The archive `validate-biobox-file-$VERSION.tar.xz` is created from the
-    build.
+  * The archive `validate-biobox-file.tar.xz` is created from the build.
   * This file is pushed to amazon S3 assuming there is not already an existing
     file with the same version number.
   * A rebuild is triggered of the [bioboxes.org][] repository.
@@ -18,10 +17,10 @@ integration server:
     documentation in the `doc` directory and [display this on the
     site][display].
 
-To make updates to this project, fork the repository and create a feature
-branch. Once you have created your changes submit a pull request. The following
-scripts are provided to help with testing, these should all pass for a PR to be
-accepted:
+To contribute changes to this project, fork the repository and create a feature
+branch. Once you have pushed your git commits to you forked repository, submit
+a pull request. The following scripts are provided to help with testing, these
+should all pass for a PR to be accepted:
 
   * `script/test`: Runs python unit tests
   * `script/feature`: Runs cucumber feature tests against the executable in
