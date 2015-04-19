@@ -26,7 +26,7 @@ downloading and unpacking. An example is to fetch the latest major version
 release and decompress it into the directory `/biobox-validator`.
 
 ~~~ dockerfile
-ENV BASE_URL https://s3-us-west-1.amazonaws.com/bioboxes-tools/validate-biobox-file/
+ENV BASE_URL https://s3-us-west-1.amazonaws.com/bioboxes-tools/validate-biobox-file
 ENV VERSION  0.x.y
 RUN mkdir /biobox-validator
 RUN wget \
