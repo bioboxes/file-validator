@@ -168,6 +168,78 @@ Feature: Validate the input file for a biobox
       """
      And the exit status should be 1
 
+ Scenario: The inner input yaml is invalid
+   Given a file named "input.yml" with:
+      """
+      ---
+        version: 0.9.0
+        arguments:
+          - invalid_fastq:
+            - id: "pe"
+              value: "example.fa"
+              type: paired
+      """
+     And a file named "schema.yml" with:
+      """
+      ---
+      $schema: "http://json-schema.org/draft-04/schema#"
+      title: "Bioboxes short read assembler input file validator"
+      type: "object"
+      properties: 
+          version: 
+            type: "string"
+            pattern: "^0.9.\\d+$"
+          arguments: 
+            type: "array"
+            minItems: 1
+            maxItems: 2
+            items: 
+              oneOf: 
+                - 
+                  $ref: "#/definitions/fastq"
+                - 
+                  $ref: "#/definitions/fragment"
+      required: 
+          - "version"
+          - "arguments"
+      additionalProperties: false
+      definitions: 
+          fastq: 
+            type: "object"
+            additionalProperties: false
+            required: 
+              - "fastq"
+            properties: 
+              fastq: 
+                $ref: "#/definitions/values"
+          fragment: 
+            type: "object"
+            additionalProperties: false
+            properties: 
+              fragment_size: 
+                $ref: "#/definitions/values"
+          values: 
+            type: "array"
+            uniqueItems: true
+            minItems: 1
+            items: 
+              type: "object"
+              additionalProperties: false
+              required: 
+                - "id"
+                - "value"
+              properties: 
+                id: {}
+                type: {}
+                value: {}
+      """
+     And an empty file named "example.fa"
+    When I run the bash command:
+      """
+      ${BINARY} --schema=schema.yml --input=input.yml
+      """
+    Then the exit status should be 1
+
   Scenario: The input file is valid
    Given a file named "input.yml" with:
       """
