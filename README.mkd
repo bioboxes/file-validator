@@ -8,7 +8,7 @@ for bioboxes. Documentation is provided in the `doc` folder.
 On a successful commit to master the following actions happen on the continuous
 integration server:
 
-  * A new binary version is built using [nuitka][].
+  * A new binary version is built using [pyinstaller][].
   * The archive `validate-biobox-file.tar.xz` is created from the build.
   * This file is pushed to amazon S3 assuming there is not already an existing
     file with the same version number.
@@ -28,6 +28,6 @@ should all pass for a PR to be accepted:
   * `script/build`: Builds a compiled version of the executable and then runs
     the same feature tests against the compiled verson.
 
-[nuitka]: http://nuitka.net/
+[pyinstaller]: https://github.com/pyinstaller/pyinstaller/wiki
 [bioboxes.org]: http://bioboxes.org
 [display]: http://bioboxes.org/validate-biobox-file/
