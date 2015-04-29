@@ -17,7 +17,7 @@ deploy: VERSION $(distributable)
 
 build: build/validate-biobox-file
 	BINARY='$(realpath $<)' \
-	 bundle exec cucumber  
+	       bundle exec cucumber
 
 feature: Gemfile.lock
 	BINARY='$(pwd)/vendor/python/bin/python $(pwd)/bin/validate-biobox-file' \
