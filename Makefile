@@ -47,11 +47,17 @@ $(distributable): build/validate-biobox-file
 	tar -c -J -f $@ $(dir $^)
 
 build/validate-biobox-file: bin/validate-biobox-file $(shell find validate_biobox_file/*.py)
-	$(env) nuitka --remove-output --standalone $<
-	rm -rf $(dir $@)
-	mv $(notdir $<).dist/ $(dir $@)
-	mv $@.exe $@
-	cp doc/validate-biobox-file.mkd $(dir $@)/README.mkd
+	$(env) pyinstaller \
+	  --workpath pyinstaller/build \
+	  --specpath pyinstaller \
+	  --onefile \
+	  --noconfirm \
+	  --clean \
+	  --distpath build \
+	  --path . \
+	  --additional-hooks-dir=$(pwd)/pyinstaller \
+	  bin/validate-biobox-file
+	cp doc/validate-biobox-file.mkd $(dir $@)README.mkd
 
 vendor/python: requirements.txt
 	virtualenv $@
