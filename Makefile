@@ -16,9 +16,9 @@ deploy: $(distributable)
 	bundle exec ./plumbing/push-to-s3 $<
 	bundle exec ./plumbing/rebuild-website
 
-build: build/validate-input
+build: dist/validate-input
 	BINARY='$(realpath $<)' \
-	       bundle exec cucumber
+	 bundle exec cucumber  
 
 feature: Gemfile.lock
 	BINARY='$(pwd)/vendor/python/bin/python $(pwd)/bin/validate-input' \
@@ -47,12 +47,9 @@ $(distributable): build/validate-input
 	mkdir -p $(dir $@)
 	tar -c -J -f $@ $(dir $^)
 
-build/validate-input: bin/validate-input $(shell find validate_input/*.py)
-	$(env) nuitka --remove-output --standalone $<
-	rm -rf $(dir $@)
-	mv $(notdir $<).dist/ $(dir $@)
-	mv $@.exe $@
-	cp doc/validate-input.mkd $(dir $@)/README.mkd
+dist/validate-input: bin/validate-input $(shell find validate_input/*.py)
+	$(env) pyinstaller --specpath pyinstaller/validate-input.spec --onefile --noconfirm --clean --distpath dist --path .  --additional-hooks-dir=. bin/validate-input
+	cp doc/validate-input.mkd $(dir $@)README.mkd
 
 vendor/python: requirements.txt
 	virtualenv $@
