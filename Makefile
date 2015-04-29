@@ -48,7 +48,7 @@ $(distributable): build/validate-input
 	tar -c -J -f $@ $(dir $^)
 
 dist/validate-input: bin/validate-input $(shell find validate_input/*.py)
-	$(env) pyinstaller --specpath pyinstaller/validate-input.spec --onefile --noconfirm --clean --distpath dist --path .  --additional-hooks-dir=. bin/validate-input
+	$(env) pyinstaller --specpath pyinstaller --onefile --noconfirm --clean --distpath dist --path .  --additional-hooks-dir=. bin/validate-input
 	cp doc/validate-input.mkd $(dir $@)README.mkd
 
 vendor/python: requirements.txt
