@@ -35,7 +35,7 @@ def test_validate_with_invalid_large_list():
     result = validate({"maxItems" : 2}, [1, 2, 3])
     f.assert_failure(result)
     nose.assert_equal(result.getValue(),
-      "Value [1, 2, 3] for field '<obj>' must have length less than or equal to 2")
+      "[1, 2, 3] is too long")
 
 def test_validate_with_missing_properties():
     schema = {"properties": {"version": {}, "arguments": {}},
@@ -43,7 +43,7 @@ def test_validate_with_missing_properties():
     input_ = {"version" : {}}
     result = validate(schema, input_)
     f.assert_failure(result)
-    nose.assert_equal(result.getValue(), "Required field 'arguments' is missing")
+    nose.assert_equal(result.getValue(), "'arguments' is a required property")
 
 def test_check_mounted_files_with_not_existing_files():
     input_ = {
