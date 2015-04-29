@@ -65,8 +65,9 @@ Feature: Validate the biobox file
      And the exit status should be 1
 
     Examples:
-      | error      | valid     |
-      | schema.yml | input.yml |
+      | error      | valid      |
+      | schema.yml | input.yml  |
+      | input.yml  | schema.yml |
 
 
   Scenario Outline: The input file is missing a property
