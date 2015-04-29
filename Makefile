@@ -46,7 +46,7 @@ $(distributable): build/validate-biobox-file
 	mkdir -p $(dir $@)
 	tar -c -J -f $@ $(dir $^)
 
-build/validate-input: bin/validate-input $(shell find validate_input/*.py)
+build/validate-input: bin/validate-input $(shell find validate_biobox_file/*.py)
 	$(env) pyinstaller \
 	  --workpath pyinstaller/build \
 	  --specpath pyinstaller \
