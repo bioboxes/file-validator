@@ -17,7 +17,7 @@ deploy: VERSION $(distributable)
 
 build: build/validate-biobox-file
 	BINARY='$(realpath $<)' \
-	       bundle exec cucumber
+	 bundle exec cucumber  
 
 feature: Gemfile.lock
 	BINARY='$(pwd)/vendor/python/bin/python $(pwd)/bin/validate-biobox-file' \
@@ -46,12 +46,18 @@ $(distributable): build/validate-biobox-file
 	mkdir -p $(dir $@)
 	tar -c -J -f $@ $(dir $^)
 
-build/validate-biobox-file: bin/validate-biobox-file $(shell find validate_biobox_file/*.py)
-	$(env) nuitka --remove-output --standalone $<
-	rm -rf $(dir $@)
-	mv $(notdir $<).dist/ $(dir $@)
-	mv $@.exe $@
-	cp doc/validate-biobox-file.mkd $(dir $@)/README.mkd
+build/validate-input: bin/validate-input $(shell find validate_input/*.py)
+	$(env) pyinstaller \
+	  --workpath pyinstaller/build \
+	  --specpath pyinstaller \
+	  --onefile \
+	  --noconfirm \
+	  --clean \
+	  --distpath build \
+	  --path . \
+	  --additional-hooks-dir=. \
+	  bin/validate-input
+	cp doc/validate-input.mkd $(dir $@)README.mkd
 
 vendor/python: requirements.txt
 	virtualenv $@

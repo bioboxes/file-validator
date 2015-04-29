@@ -2,8 +2,8 @@ import argparse
 import yaml
 import yaml.scanner as scan
 import os.path
-import validictory as js
-
+from jsonschema import Draft4Validator
+from jsonschema.exceptions import best_match
 from pymonad.Either import Left, Right
 from pymonad.Reader import curry
 
@@ -36,11 +36,12 @@ def parse_yaml(file_):
 
 @curry
 def validate(schema, input_):
-    try:
-        js.validate(input_, schema)
-    except ValueError as error:
+    validator = Draft4Validator(schema)
+    if(validator.is_valid(input_)):
+        return Right(input_)
+    else:
+        error = best_match(Draft4Validator(schema).iter_errors(input_))
         return Left(error.message)
-    return Right(input_)
 
 def check_mounted_files(input_):
     files = filter(lambda x : x.iterkeys().next() in get_file_types(), input_["arguments"])

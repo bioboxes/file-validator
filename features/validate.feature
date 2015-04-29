@@ -95,7 +95,7 @@ Feature: Validate the biobox file
     Then the stdout should not contain anything
      And the stderr should contain:
       """
-      Required field '<missing>' is missing
+      '<missing>' is a required property\n
       """
      And the exit status should be 1
 
@@ -128,7 +128,7 @@ Feature: Validate the biobox file
     Then the stdout should not contain anything
      And the stderr should contain:
       """
-      must have length less than or equal to 2
+      ['item', 'item', 'item'] is too long\n
       """
      And the exit status should be 1
 
@@ -168,12 +168,79 @@ Feature: Validate the biobox file
       """
      And the exit status should be 1
 
-    Examples:
-      | type  |
-      | fastq |
-      | fasta |
+  Scenario: The inner input yaml is invalid
+   Given a file named "input.yml" with:
+      """
+      ---
+        version: 0.9.0
+        arguments:
+          - invalid_fastq:
+            - id: "pe"
+              value: "example.fa"
+              type: paired
+      """
+     And a file named "schema.yml" with:
+      """
+      ---
+      $schema: "http://json-schema.org/draft-04/schema#"
+      title: "Bioboxes short read assembler input file validator"
+      type: "object"
+      properties: 
+          version: 
+            type: "string"
+            pattern: "^0.9.\\d+$"
+          arguments: 
+            type: "array"
+            minItems: 1
+            maxItems: 2
+            items: 
+              oneOf: 
+                - 
+                  $ref: "#/definitions/fastq"
+                - 
+                  $ref: "#/definitions/fragment"
+      required: 
+          - "version"
+          - "arguments"
+      additionalProperties: false
+      definitions: 
+          fastq: 
+            type: "object"
+            additionalProperties: false
+            required: 
+              - "fastq"
+            properties: 
+              fastq: 
+                $ref: "#/definitions/values"
+          fragment: 
+            type: "object"
+            additionalProperties: false
+            properties: 
+              fragment_size: 
+                $ref: "#/definitions/values"
+          values: 
+            type: "array"
+            uniqueItems: true
+            minItems: 1
+            items: 
+              type: "object"
+              additionalProperties: false
+              required: 
+                - "id"
+                - "value"
+              properties: 
+                id: {}
+                type: {}
+                value: {}
+      """
+     And an empty file named "example.fa"
+    When I run the bash command:
+      """
+      ${BINARY} --schema=schema.yml --input=input.yml
+      """
+    Then the exit status should be 1
 
-  Scenario Outline: The input <type> file is exists
+  Scenario: The input file is valid
    Given a file named "input.yml" with:
       """
       ---

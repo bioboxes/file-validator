@@ -6,3 +6,5 @@ tmp
 Gemfile.lock
 *.pyc
 .bundle
+pyinstaller/validate-input.spec
+pyinstaller/build
