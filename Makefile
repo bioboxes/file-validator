@@ -2,6 +2,8 @@ env = PYTHONPATH=validate_biobox_file:vendor/python/lib/python2.7/site-packages 
 
 pwd = $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 
+image = deb-builder
+
 distributable = dist/validate-biobox-file.tar.xz
 
 ###############################################
