@@ -7,4 +7,4 @@ hash fswatch 2>/dev/null || {
 
 CMD='clear && ./script/test'
 eval ${CMD}
-fswatch -o ./validate_input -o ./test | xargs -n 1 -I {} bash -c "eval ${CMD}"
+fswatch -o ./validate_biobox_file -o ./test | xargs -n 1 -I {} bash -c "eval ${CMD}"
