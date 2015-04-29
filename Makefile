@@ -55,7 +55,7 @@ build/validate-biobox-file: bin/validate-biobox-file $(shell find validate_biobo
 	  --clean \
 	  --distpath build \
 	  --path . \
-	  --additional-hooks-dir=. \
+	  --additional-hooks-dir=$(pwd)/pyinstaller \
 	  bin/validate-biobox-file
 	cp doc/validate-biobox-file.mkd $(dir $@)README.mkd
 
