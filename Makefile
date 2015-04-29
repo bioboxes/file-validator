@@ -16,7 +16,7 @@ deploy: $(distributable)
 	bundle exec ./plumbing/push-to-s3 $<
 	bundle exec ./plumbing/rebuild-website
 
-build: dist/validate-input
+build: build/validate-input
 	BINARY='$(realpath $<)' \
 	 bundle exec cucumber  
 
@@ -47,8 +47,8 @@ $(distributable): build/validate-input
 	mkdir -p $(dir $@)
 	tar -c -J -f $@ $(dir $^)
 
-dist/validate-input: bin/validate-input $(shell find validate_input/*.py)
-	$(env) pyinstaller --specpath pyinstaller --onefile --noconfirm --clean --distpath dist --path .  --additional-hooks-dir=. bin/validate-input
+build/validate-input: bin/validate-input $(shell find validate_input/*.py)
+	$(env) pyinstaller --workpath pyinstaller/build --specpath pyinstaller --onefile --noconfirm --clean --distpath build --path .  --additional-hooks-dir=. bin/validate-input
 	cp doc/validate-input.mkd $(dir $@)README.mkd
 
 vendor/python: requirements.txt
