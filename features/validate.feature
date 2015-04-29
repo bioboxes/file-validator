@@ -95,7 +95,7 @@ Feature: Validate the input file for a biobox
     Then the stdout should not contain anything
      And the stderr should contain:
       """
-      Required field '<missing>' is missing
+      '<missing>' is a required property\n
       """
      And the exit status should be 1
 
@@ -128,7 +128,7 @@ Feature: Validate the input file for a biobox
     Then the stdout should not contain anything
      And the stderr should contain:
       """
-      must have length less than or equal to 2
+      ['item', 'item', 'item'] is too long\n
       """
      And the exit status should be 1
 
