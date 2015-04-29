@@ -168,6 +168,12 @@ Feature: Validate the biobox file
       """
      And the exit status should be 1
 
+    Examples:
+      | type  |
+      | fastq |
+      | fasta |
+
+
   Scenario: The inner input yaml is invalid
    Given a file named "input.yml" with:
       """
@@ -240,13 +246,13 @@ Feature: Validate the biobox file
       """
     Then the exit status should be 1
 
-  Scenario: The input file is valid
+  Scenario Outline: The input file is valid
    Given a file named "input.yml" with:
       """
       ---
         version: 0.9.0
         arguments:
-          - fastq:
+          - <type>:
             - id: "pe"
               value: "example_file"
               type: paired
