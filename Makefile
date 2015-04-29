@@ -46,7 +46,7 @@ $(distributable): build/validate-biobox-file
 	mkdir -p $(dir $@)
 	tar -c -J -f $@ $(dir $^)
 
-build/validate-input: bin/validate-input $(shell find validate_biobox_file/*.py)
+build/validate-biobox-file: bin/validate-biobox-file $(shell find validate_biobox_file/*.py)
 	$(env) pyinstaller \
 	  --workpath pyinstaller/build \
 	  --specpath pyinstaller \
@@ -56,8 +56,8 @@ build/validate-input: bin/validate-input $(shell find validate_biobox_file/*.py)
 	  --distpath build \
 	  --path . \
 	  --additional-hooks-dir=. \
-	  bin/validate-input
-	cp doc/validate-input.mkd $(dir $@)README.mkd
+	  bin/validate-biobox-file
+	cp doc/validate-biobox-file.mkd $(dir $@)README.mkd
 
 vendor/python: requirements.txt
 	virtualenv $@

@@ -6,5 +6,5 @@ tmp
 Gemfile.lock
 *.pyc
 .bundle
-pyinstaller/validate-input.spec
+pyinstaller/validate-biobox-file.spec
 pyinstaller/build
