@@ -42,8 +42,8 @@ ssh: $(distributable) .image
 		--tty \
 		--interactive \
 		--volume=$(pwd)/$(dir $<):/src:rw \
-		$(image) \
-		/bin/bash
+		--entrypoint=/bin/bash \
+		$(image)
 
 bootstrap: Gemfile.lock vendor/python
 
