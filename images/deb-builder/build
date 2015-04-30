@@ -8,7 +8,7 @@ SRC=/src/validate-biobox-file.tar.xz
 VERSION=${1}
 
 NAME=$(basename ${SRC} .tar.xz)
-DEB=${NAME}_${VERSION}
+DEB=${NAME}_${VERSION}_amd64
 
 cd $(mktemp -d)
 tar -xJf ${SRC}

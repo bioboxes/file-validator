@@ -7,7 +7,7 @@ image = deb-builder
 package_version  = $(shell cat VERSION)-$(shell cat DEBIAN_PACKAGE_VERSION)
 
 distributable = dist/validate-biobox-file.tar.xz
-package       = dist/validate-biobox-file_$(package_version).deb
+package       = dist/validate-biobox-file_$(package_version)_amd64.deb
 
 ###############################################
 #
@@ -58,7 +58,7 @@ bootstrap: Gemfile.lock vendor/python
 $(package): $(distributable) .image
 	docker run \
 		--volume=$(pwd)/$(dir $<):/src:rw \
-		$(image) $(package_version)
+		$(image) $(package_version) $@
 
 .image: images/deb-builder/Dockerfile
 	docker build --tag $(image) $(pwd)/$(dir $<)
