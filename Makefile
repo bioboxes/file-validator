@@ -60,6 +60,7 @@ build/validate-biobox-file: bin/validate-biobox-file $(shell find validate_biobo
 	  --additional-hooks-dir=$(pwd)/pyinstaller \
 	  bin/validate-biobox-file
 	cp doc/validate-biobox-file.mkd $(dir $@)README.mkd
+	cp VERSION $(dir $@)
 
 vendor/python: requirements.txt
 	virtualenv $@
