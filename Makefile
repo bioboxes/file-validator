@@ -2,7 +2,12 @@ env = PYTHONPATH=validate_biobox_file:vendor/python/lib/python2.7/site-packages 
 
 pwd = $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 
+image = deb-builder
+
+package_version  = $(shell cat VERSION)-$(shell cat DEBIAN_PACKAGE_VERSION)
+
 distributable = dist/validate-biobox-file.tar.xz
+package       = dist/validate-biobox-file_$(package_version)_amd64.deb
 
 ###############################################
 #
@@ -11,9 +16,12 @@ distributable = dist/validate-biobox-file.tar.xz
 ###############################################
 
 
-deploy: VERSION $(distributable)
-	bundle exec ./plumbing/push-to-s3 $^
+deploy: VERSION $(distributable) $(package)
+	bundle exec ./plumbing/push-to-s3 VERSION $(distributable)
+	bundle exec ./plumbing/push-to-deb $(package)
 	bundle exec ./plumbing/rebuild-website
+
+package: $(package) $(distributable)
 
 build: build/validate-biobox-file
 	BINARY='$(realpath $<)' \
@@ -29,10 +37,17 @@ test:
 console:
 	$(env) python -i console.py
 
+ssh: $(distributable) .image
+	docker run \
+		--tty \
+		--interactive \
+		--volume=$(pwd)/$(dir $<):/src:rw \
+		--entrypoint=/bin/bash \
+		$(image)
+
 bootstrap: Gemfile.lock vendor/python
 
-
-.PHONY: bootstrap console test feature build deploy
+.PHONY: bootstrap console test feature build deploy ssh
 
 
 ###############################################
@@ -41,6 +56,13 @@ bootstrap: Gemfile.lock vendor/python
 #
 ###############################################
 
+$(package): $(distributable) .image
+	docker run \
+		--volume=$(pwd)/$(dir $<):/src:rw \
+		$(image) $(package_version) $@
+
+.image: images/deb-builder/Dockerfile
+	docker build --tag $(image) $(pwd)/$(dir $<)
 
 $(distributable): build/validate-biobox-file
 	mkdir -p $(dir $@)
@@ -58,6 +80,7 @@ build/validate-biobox-file: bin/validate-biobox-file $(shell find validate_biobo
 	  --additional-hooks-dir=$(pwd)/pyinstaller \
 	  bin/validate-biobox-file
 	cp doc/validate-biobox-file.mkd $(dir $@)README.mkd
+	cp VERSION $(dir $@)
 
 vendor/python: requirements.txt
 	virtualenv $@

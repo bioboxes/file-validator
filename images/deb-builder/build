@@ -1,0 +1,33 @@
+#!/bin/bash
+
+set -o errexit
+set -o nounset
+set -o xtrace
+
+SRC=/src/validate-biobox-file.tar.xz
+VERSION=${1}
+
+NAME=$(basename ${SRC} .tar.xz)
+DEB=${NAME}_${VERSION}_amd64
+
+cd $(mktemp -d)
+tar -xJf ${SRC}
+
+mkdir -p ${DEB}/DEBIAN ${DEB}/usr/bin
+cp build/${NAME} ${DEB}/usr/bin
+
+cat << EOF > ${DEB}/DEBIAN/control
+Package: ${NAME}
+Version: ${VERSION}
+Architecture: amd64
+Maintainer: Michael Barton<mail@michaelbarton.me.uk>
+Installed-Size: 2
+Depends:
+Section: extras
+Priority: optional
+Homepage: http://bioboxes.org/validate-biobox-file/
+Description: A tool for validating biobox.yaml files.
+EOF
+
+dpkg --build ${DEB}
+cp ${DEB}.deb $(dirname ${SRC})
