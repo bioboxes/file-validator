@@ -5,16 +5,20 @@ set -o nounset
 set -o xtrace
 
 SRC=/src/validate-biobox-file.tar.xz
-NAME=validate-biobox-file
+
+TOOL_VERSION=${1}
+DEB_VERSION=${2}
+NAME=$(basename ${SRC} .tar.xz)
+
+DEB=${NAME}_${TOOL_VERSION}_${DEB_VERSION}
 
 cd $(mktemp -d)
-
 tar -xJf ${SRC}
 
-mkdir -p ${NAME}/DEBIAN ${NAME}/usr/bin
-cp build/${NAME} ${NAME}/usr/bin
+mkdir -p ${DEB}/DEBIAN ${DEB}/usr/bin
+cp build/${NAME} ${DEB}/usr/bin
 
-cat << EOF > ${NAME}/DEBIAN/control
+cat << EOF > ${DEB}/DEBIAN/control
 Package: ${NAME}
 Version: $(cat build/VERSION)
 Architecture: all
@@ -27,5 +31,5 @@ Homepage: http://bioboxes.org/validate-biobox-file/
 Description: A tool for validating biobox.yaml files.
 EOF
 
-dpkg -b ${NAME}
-cp ${NAME}.deb $(dirname ${SRC})
+dpkg --build ${DEB}
+cp ${DEB}.deb $(dirname ${SRC})
