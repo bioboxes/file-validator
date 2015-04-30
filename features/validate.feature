@@ -141,9 +141,7 @@ Feature: Validate the biobox file
         version: 0.9.0
         arguments:
           - <type>:
-            - id: "pe"
-              value: "missing_file"
-              type: paired
+            <nesting> {id: "pe", value: "missing_file", type: paired}
       """
      And a file named "schema.yml" with:
       """
@@ -170,9 +168,11 @@ Feature: Validate the biobox file
      And the exit status should be 1
 
     Examples:
-      | type  |
-      | fastq |
-      | fasta |
+      | type  | nesting |
+      | fastq | -       |
+      | fasta | -       |
+      | fastq |         |
+      | fasta |         |
 
 
   Scenario: The inner input yaml is invalid
@@ -254,9 +254,7 @@ Feature: Validate the biobox file
         version: 0.9.0
         arguments:
           - <type>:
-            - id: "pe"
-              value: "example_file"
-              type: paired
+            <nesting> {id: "pe", value: "example_file", type: paired }
       """
      And a file named "schema.yml" with:
       """
@@ -281,6 +279,8 @@ Feature: Validate the biobox file
      And the exit status should be 0
 
     Examples:
-      | type  |
-      | fastq |
-      | fasta |
+      | type  | nesting |
+      | fastq | -       |
+      | fasta | -       |
+      | fastq |         |
+      | fasta |         |
