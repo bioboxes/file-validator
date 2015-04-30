@@ -16,8 +16,9 @@ package       = dist/validate-biobox-file_$(package_version)_amd64.deb
 ###############################################
 
 
-deploy: VERSION $(distributable)
-	bundle exec ./plumbing/push-to-s3 $^
+deploy: VERSION $(distributable) $(package)
+	bundle exec ./plumbing/push-to-s3 VERSION $(distributable)
+	bundle exec ./plumbing/push-to-deb $(package)
 	bundle exec ./plumbing/rebuild-website
 
 package: $(package) $(distributable)
@@ -41,8 +42,8 @@ ssh: $(distributable) .image
 		--tty \
 		--interactive \
 		--volume=$(pwd)/$(dir $<):/src:rw \
-		$(image) \
-		/bin/bash
+		--entrypoint=/bin/bash \
+		$(image)
 
 bootstrap: Gemfile.lock vendor/python
 

@@ -19,7 +19,7 @@ cp build/${NAME} ${DEB}/usr/bin
 cat << EOF > ${DEB}/DEBIAN/control
 Package: ${NAME}
 Version: ${VERSION}
-Architecture: all
+Architecture: amd64
 Maintainer: Michael Barton<mail@michaelbarton.me.uk>
 Installed-Size: 2
 Depends:
