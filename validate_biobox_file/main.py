@@ -50,25 +50,21 @@ def check_mounted_files(input_):
         file_types = ["fastq","fasta"]
         return any(map(lambda x: x in arg.keys(), file_types))
 
-    def validate_file_arg(arg):
-        if arg.__class__ == list:
-            return map(validate_file_arg, arg)
+    def validate_file(arg):
+        if not os.path.isfile(arg["value"]):
+            msg = "Provided path '{0}' in item '{1}' does not exist."
+            return Left(msg.format(arg["value"], arg["id"]))
         else:
-            if not os.path.isfile(arg["value"]):
-                msg = "Provided path '{0}' in item '{1}' does not exist."
-                return Left(msg.format(arg["value"], arg["id"]))
-            else:
-                return Right("This message is never propogated to user.")
+            return Right("This message is never propogated to user.")
 
     def resolve(x, y):
         if y.__class__ == list:
             return reduce(resolve, y, x) >> x
         else:
-            return y >> x
+            return validate_file(y) >> x
 
-    file_args   = filter(is_file_arg, input_['arguments'])
-    file_states = map(lambda x: validate_file_arg(x.values()), file_args)
-    return reduce(resolve, file_states, Right(input_))
+    file_args = map(lambda x: x.values(), filter(is_file_arg, input_['arguments']))
+    return reduce(resolve, file_args, Right(input_))
 
 
 def run():
