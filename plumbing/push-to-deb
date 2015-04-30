@@ -1,0 +1,8 @@
+#!/bin/bash
+
+set -o errexit
+set -o nounset
+
+PACKAGE=${1}
+
+bundle exec deb-s3 upload --bucket debian.bioboxes.org ${PACKAGE}
