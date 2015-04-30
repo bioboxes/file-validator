@@ -59,7 +59,7 @@ $(package): $(distributable) .image
 		$(image)
 
 .image: images/deb-builder/Dockerfile
-	docker build --tag $(image) $(dir $<)
+	docker build --tag $(image) $(pwd)/$(dir $<)
 
 $(distributable): build/validate-biobox-file
 	mkdir -p $(dir $@)
