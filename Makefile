@@ -4,11 +4,10 @@ pwd = $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 
 image = deb-builder
 
-tool_version   = $(shell cat VERSION)
-debian_version = $(shell cat DEBIAN_PACKAGE_VERSION)
+package_version  = $(shell cat VERSION)-$(shell cat DEBIAN_PACKAGE_VERSION)
 
 distributable = dist/validate-biobox-file.tar.xz
-package       = dist/validate-biobox-file.deb
+package       = dist/validate-biobox-file_$(package_version).deb
 
 ###############################################
 #
@@ -59,7 +58,7 @@ bootstrap: Gemfile.lock vendor/python
 $(package): $(distributable) .image
 	docker run \
 		--volume=$(pwd)/$(dir $<):/src:rw \
-		$(image) $(tool_version) $(debian_version)
+		$(image) $(package_version)
 
 .image: images/deb-builder/Dockerfile
 	docker build --tag $(image) $(pwd)/$(dir $<)

@@ -5,11 +5,9 @@ set -o nounset
 set -o xtrace
 
 SRC=/src/validate-biobox-file.tar.xz
-TOOL_VERSION=${1}
-DEB_VERSION=${2}
+VERSION=${1}
 
 NAME=$(basename ${SRC} .tar.xz)
-VERSION=${TOOL_VERSION}-${DEB_VERSION}
 DEB=${NAME}_${VERSION}
 
 cd $(mktemp -d)
