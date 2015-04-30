@@ -5,12 +5,12 @@ set -o nounset
 set -o xtrace
 
 SRC=/src/validate-biobox-file.tar.xz
-
 TOOL_VERSION=${1}
 DEB_VERSION=${2}
-NAME=$(basename ${SRC} .tar.xz)
 
-DEB=${NAME}_${TOOL_VERSION}_${DEB_VERSION}
+NAME=$(basename ${SRC} .tar.xz)
+VERSION=${TOOL_VERSION}-${DEB_VERSION}
+DEB=${NAME}_${VERSION}
 
 cd $(mktemp -d)
 tar -xJf ${SRC}
@@ -20,7 +20,7 @@ cp build/${NAME} ${DEB}/usr/bin
 
 cat << EOF > ${DEB}/DEBIAN/control
 Package: ${NAME}
-Version: $(cat build/VERSION)
+Version: ${VERSION}
 Architecture: all
 Maintainer: Michael Barton<mail@michaelbarton.me.uk>
 Installed-Size: 2
