@@ -5,6 +5,7 @@ pwd = $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 image = deb-builder
 
 distributable = dist/validate-biobox-file.tar.xz
+package       = dist/validate-biobox-file.deb
 
 ###############################################
 #
@@ -31,10 +32,17 @@ test:
 console:
 	$(env) python -i console.py
 
+ssh: $(distributable) .image
+	docker run \
+		--tty \
+		--interactive \
+		--volume=$(pwd)/$(dir $<):/src:rw \
+		$(image) \
+		/bin/bash
+
 bootstrap: Gemfile.lock vendor/python
 
-
-.PHONY: bootstrap console test feature build deploy
+.PHONY: bootstrap console test feature build deploy ssh
 
 
 ###############################################
@@ -43,6 +51,13 @@ bootstrap: Gemfile.lock vendor/python
 #
 ###############################################
 
+$(package): $(distributable) .image
+	docker run \
+		--volume=$(pwd)/$(dir $<):/src:rw \
+		$(image)
+
+.image: images/deb-builder/Dockerfile
+	docker build --tag $(image) $(dir $<)
 
 $(distributable): build/validate-biobox-file
 	mkdir -p $(dir $@)
