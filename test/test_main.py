@@ -45,19 +45,26 @@ def test_validate_with_missing_properties():
     f.assert_failure(result)
     nose.assert_equal(result.getValue(), "'arguments' is a required property")
 
-def test_check_mounted_files_with_not_existing_files():
-    input_ = {
-        "version" : "0.9.0",
-        "arguments" : [
-                {
-                 "fastq" : [{
-                     "id" : "t",
-                     "value" : "/path/to/file",
-                     "type": "paired"
-                 }]
-                }
-              ]
-    }
-    result = main.check_mounted_files(input_)
+def test_check_mounted_files_with_list_having_missing_file():
+    input_ = [{"fastq" : [
+                {"id"    : "t",
+                 "value" : "/path/to/file"}]}]
+    result = main.check_mounted_files(f.create_biobox_dict(input_))
     f.assert_failure(result)
     nose.assert_equal(result.getValue(), "Provided path '/path/to/file' in item 't' does not exist.")
+
+def test_check_mounted_files_with_single_entry_having_missing_file():
+    input_ = [{"fastq" :
+               {"id"    : "t",
+                "value" : "/path/to/file"}}]
+    result = main.check_mounted_files(f.create_biobox_dict(input_))
+    f.assert_failure(result)
+    nose.assert_equal(result.getValue(), "Provided path '/path/to/file' in item 't' does not exist.")
+
+def test_check_mounted_files_with_single_entry_having_existing_file():
+    input_ = [{"fastq" :
+               {"id"    : "t",
+                "value" : f.create_temp_file("")}}]
+    result = main.check_mounted_files(f.create_biobox_dict(input_))
+    f.assert_successful(result)
+    nose.assert_equal(result.getValue(), f.create_biobox_dict(input_))

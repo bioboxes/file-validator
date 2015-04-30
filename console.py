@@ -1,3 +1,3 @@
-from validate_input.main import *
-from pymonad.Either      import *
-from pymonad.Applicative import *
+from validate_biobox_file.main import *
+from pymonad.Either            import *
+from pymonad.Applicative       import *

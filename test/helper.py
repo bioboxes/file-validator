@@ -14,3 +14,6 @@ def assert_successful(a):
 
 def assert_failure(a):
     nose.assert_equal(a.__class__, Left)
+
+def create_biobox_dict(args):
+    return {"version" : "0.9.0", "arguments" : args }

@@ -43,16 +43,33 @@ def validate(schema, input_):
         error = best_match(Draft4Validator(schema).iter_errors(input_))
         return Left(error.message)
 
-def check_mounted_files(input_):
-    files = filter(lambda x : x.iterkeys().next() in get_file_types(), input_["arguments"])
-    for file in files:
-        f = file.itervalues().next()[0]
-        if not os.path.isfile(f["value"]):
-            return Left("Provided path '{0}' in item '{1}' does not exist.".format(f["value"], f["id"]))
-    return Right(input_)
 
-def get_file_types():
-    return ["fastq","fasta"]
+def check_mounted_files(input_):
+
+    def is_file_arg(arg):
+        file_types = ["fastq","fasta"]
+        return any(map(lambda x: x in arg.keys(), file_types))
+
+    def validate_file_arg(arg):
+        if arg.__class__ == list:
+            return map(validate_file_arg, arg)
+        else:
+            if not os.path.isfile(arg["value"]):
+                msg = "Provided path '{0}' in item '{1}' does not exist."
+                return Left(msg.format(arg["value"], arg["id"]))
+            else:
+                return Right("This message is never propogated to user.")
+
+    def resolve(x, y):
+        if y.__class__ == list:
+            return reduce(resolve, y, x) >> x
+        else:
+            return y >> x
+
+    file_args   = filter(is_file_arg, input_['arguments'])
+    file_states = map(lambda x: validate_file_arg(x.values()), file_args)
+    return reduce(resolve, file_states, Right(input_))
+
 
 def run():
     args  = get_arguments()
