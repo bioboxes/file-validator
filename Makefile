@@ -18,6 +18,8 @@ deploy: VERSION $(distributable)
 	bundle exec ./plumbing/push-to-s3 $^
 	bundle exec ./plumbing/rebuild-website
 
+package: $(package) $(distributable)
+
 build: build/validate-biobox-file
 	BINARY='$(realpath $<)' \
 	       bundle exec cucumber
