@@ -6,6 +6,7 @@ from jsonschema import Draft4Validator
 from jsonschema.exceptions import best_match
 from pymonad.Either import Left, Right
 from pymonad.Reader import curry
+import pymonad.Maybe
 
 # This imports the * and & operators for monads
 from pymonad.Applicative import *
@@ -46,14 +47,22 @@ def validate(schema, input_):
 
 def check_mounted_files(input_):
 
+
     def is_file_arg(arg):
         file_types = ["fastq","fasta"]
         return any(map(lambda x: x in arg.keys(), file_types))
 
+    def is_file_format(arg):
+        file_formats = ["taxbinning", "fasta", "fastq"]
+        if isinstance(arg, dict) and "format" in arg.keys():
+            return any(map(lambda x: x in arg["format"], file_formats))
+        else:
+            return any([])
+
     def validate_file(arg):
         if not os.path.isfile(arg["value"]):
-            msg = "Provided path '{0}' in item '{1}' does not exist."
-            return Left(msg.format(arg["value"], arg["id"]))
+            msg = "Provided path '{0}' does not exist."
+            return Left(msg.format(arg["value"]))
         else:
             return Right("This message is never propogated to user.")
 
@@ -63,9 +72,15 @@ def check_mounted_files(input_):
         else:
             return validate_file(y) >> x
 
-    file_args = map(lambda x: x.values(), filter(is_file_arg, input_['arguments']))
+    args = input_['arguments']
+    file_args = []
+    if isinstance(args, list):
+        file_args = map(lambda x: x.values(), filter(is_file_arg, args))
+    if isinstance(args, dict):
+        file_args = map(lambda x: args[x], dict((k, v) for k, v in args.items() if is_file_format(v)))
+        #this should be refactored, when all interfaces use attributes instead of lists
+        file_args = map(lambda x: {"value" : x["path"]}, file_args)
     return reduce(resolve, file_args, Right(input_))
-
 
 def run():
     args  = get_arguments()
