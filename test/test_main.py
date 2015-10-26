@@ -51,7 +51,7 @@ def test_check_mounted_files_with_list_having_missing_file():
                  "value" : "/path/to/file"}]}]
     result = main.check_mounted_files(f.create_biobox_dict(input_))
     f.assert_failure(result)
-    nose.assert_equal(result.getValue(), "Provided path '/path/to/file' in item 't' does not exist.")
+    nose.assert_equal(result.getValue(), "Provided path '/path/to/file' does not exist.")
 
 def test_check_mounted_files_with_single_entry_having_missing_file():
     input_ = [{"fastq" :
@@ -59,12 +59,20 @@ def test_check_mounted_files_with_single_entry_having_missing_file():
                 "value" : "/path/to/file"}}]
     result = main.check_mounted_files(f.create_biobox_dict(input_))
     f.assert_failure(result)
-    nose.assert_equal(result.getValue(), "Provided path '/path/to/file' in item 't' does not exist.")
+    nose.assert_equal(result.getValue(), "Provided path '/path/to/file' does not exist.")
 
 def test_check_mounted_files_with_single_entry_having_existing_file():
     input_ = [{"fastq" :
                {"id"    : "t",
                 "value" : f.create_temp_file("")}}]
+    result = main.check_mounted_files(f.create_biobox_dict(input_))
+    f.assert_successful(result)
+    nose.assert_equal(result.getValue(), f.create_biobox_dict(input_))
+
+def test_check_mounted_files_with_key_value_entries():
+    input_ = {"sequences" :
+                   {"id"    : "t",
+                    "value" : f.create_temp_file("")}}
     result = main.check_mounted_files(f.create_biobox_dict(input_))
     f.assert_successful(result)
     nose.assert_equal(result.getValue(), f.create_biobox_dict(input_))
