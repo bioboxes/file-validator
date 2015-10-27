@@ -163,7 +163,7 @@ Feature: Validate the biobox file
     Then the stdout should not contain anything
      And the stderr should contain:
       """
-      Provided path 'missing_file' in item 'pe' does not exist.
+      Provided path 'missing_file' does not exist.
       """
      And the exit status should be 1
 
