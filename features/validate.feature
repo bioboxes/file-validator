@@ -247,7 +247,7 @@ Feature: Validate the biobox file
       """
     Then the exit status should be 1
 
-  Scenario Outline: The input file is valid
+  Scenario Outline: The Fasta input file is valid
    Given a file named "input.yml" with:
       """
       ---
@@ -280,7 +280,42 @@ Feature: Validate the biobox file
 
     Examples:
       | type  | nesting |
-      | fastq | -       |
       | fasta | -       |
-      | fastq |         |
       | fasta |         |
+
+  Scenario Outline: The Fastq input file is valid
+    Given a file named "input.yml" with:
+      """
+      ---
+        version: 0.9.0
+        arguments:
+          - <type>:
+            <nesting> {id: "pe", value: "reads.fq.gz", type: paired }
+      """
+    And I copy a gzipped fastq file named reads.fq.gz
+    And a file named "schema.yml" with:
+      """
+      ---
+      $schema: http://json-schema.org/draft-04/schema
+      title: Bioboxes short read assembler input file validator
+      type: object
+      properties:
+        version: {}
+        arguments: {}
+      required:
+        - version
+        - arguments
+      """
+    And an empty file named "example_file"
+    When I run the bash command:
+      """
+      ${BINARY} --schema=schema.yml --input=input.yml
+      """
+    Then the stdout should not contain anything
+    And the stderr should not contain anything
+    And the exit status should be 0
+
+    Examples:
+      | type  | nesting |
+      | fastq | -       |
+      | fastq |         |
