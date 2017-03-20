@@ -2,12 +2,12 @@ import argparse
 import yaml
 import yaml.scanner as scan
 import os.path
+import mimetypes
+from functools import partial
 from jsonschema import Draft4Validator
 from jsonschema.exceptions import best_match
 from pymonad.Either import Left, Right
 from pymonad.Reader import curry
-import pymonad.Maybe
-
 # This imports the * and & operators for monads
 from pymonad.Applicative import *
 
@@ -59,28 +59,40 @@ def check_mounted_files(input_):
         else:
             return any([])
 
-    def validate_file(arg):
-        if not os.path.isfile(arg["value"]):
+    def is_gzipped(file):
+        (_, type) = mimetypes.guess_type(file)
+        if(type=='gzip'):
+            return True;
+        return False
+
+    def validate_file(arg, format):
+        file = arg["value"]
+        if not os.path.isfile(file):
             msg = "Provided path '{0}' does not exist."
+            return Left(msg.format(arg["value"]))
+        if format == "fastq" and not is_gzipped(file):
+            msg = "Provided file '{0}' is not gzipped."
             return Left(msg.format(arg["value"]))
         else:
             return Right("This message is never propogated to user.")
 
-    def resolve(x, y):
+    def resolve(format, x, y):
+        if type(y) is tuple:
+            (format, y) = y
         if y.__class__ == list:
-            return reduce(resolve, y, x) >> x
+            return reduce(partial(resolve, format), y, x) >> x
         else:
-            return validate_file(y) >> x
+            return validate_file(y, format) >> x
 
     args = input_['arguments']
     file_args = []
     if isinstance(args, list):
-        file_args = map(lambda x: x.values(), filter(is_file_arg, args))
+        file_args = map(lambda x: (x.keys()[0], x.values()), filter(is_file_arg, args))
     if isinstance(args, dict):
         file_args = map(lambda x: args[x], dict((k, v) for k, v in args.items() if is_file_format(v)))
         #this should be refactored, when all interfaces use attributes instead of lists
-        file_args = map(lambda x: {"value" : x["path"]}, file_args)
-    return reduce(resolve, file_args, Right(input_))
+        file_args = map(lambda x: (x["format"], {"value" : x["path"]}), file_args)
+    return reduce(partial(resolve, None), file_args, Right(input_))
 
 def run():
     args  = get_arguments()
