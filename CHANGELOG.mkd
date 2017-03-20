@@ -1,3 +1,7 @@
+## 0.2.0
+
+  * Check if FASTQ is gzipped or not
+
 ## 0.1.2
 
   * Fixed bug where, if an given biobox file argument was a single FASTQ/FASTQ
